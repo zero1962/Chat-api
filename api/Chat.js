@@ -19,8 +19,13 @@ export default async function handler(req, res) {
   const { message } = req.body;
 
   const response = await fetch(
+<<<<<<< HEAD
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + process.env.GEMINI_API_KEY,
    {
+=======
+  "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + process.env.GEMINI_API_KEY,
+  {
+>>>>>>> 795f5c176c30cdec87b011d67d7fe44e14cf31ab
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -34,7 +39,9 @@ export default async function handler(req, res) {
         }
       ]
     })
-  });
+  }
+);
+
 
   const data = await response.json();
   res.status(200).json(data);
