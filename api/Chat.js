@@ -1,7 +1,7 @@
 // api/chat.js
 export default async function handler(req, res) {
   // CORSヘッダーを追加
-  res.setHeader("Access-Control-Allow-Origin", "http://zero1962b.world.coocan.jp/");
+  res.setHeader("Access-Control-Allow-Origin", "http://zero1962b.world.coocan.jp");
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
