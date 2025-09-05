@@ -5,7 +5,8 @@ import dialogflow from "@google-cloud/dialogflow";
 const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n");
 const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
 // DialogflowのプロジェクトID "gen-lang-client-067380249"
-const projectId = process.env.GOOGLE_PROJECT_ID;
+// const projectId = process.env.GOOGLE_PROJECT_ID;
+const projectId = process.env.GOOGLE_CLOUD_PROJECT;
 
 // セッションIDはユーザーごとに一意のIDを使用します
 const sessionId = "12345";
