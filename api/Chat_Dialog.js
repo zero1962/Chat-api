@@ -38,6 +38,9 @@ export default async function handler(req, res) {
   // ユーザーからのメッセージを取得
   const { message } = req.body;
 
+  const actualProjectId = await sessionClient.getProjectId();
+　console.log("実際に使われているプロジェクトID:", actualProjectId);
+
   // ??セッションパスをここで作成！
   const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
 
