@@ -40,6 +40,10 @@ export default async function handler(req, res) {
 
   const actualProjectId = await sessionClient.getProjectId();
 　console.log("実際に使われているプロジェクトID:", actualProjectId);
+　console.info("実際に使われているプロジェクトID:", actualProjectId);
+　console.error("実際に使われているプロジェクトID:", actualProjectId);
+　res.status().json("実際に使われているプロジェクトID:", actualProjectId);
+
 
   // ??セッションパスをここで作成！
   const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
