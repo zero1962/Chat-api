@@ -70,6 +70,7 @@ export default async function handler(req, res) {
       text: result.fulfillmentText,
       intentDisplayName: result.intent.displayName,
     });
+    console.log(result);
   } catch (error) {
     console.error("Dialogflow API Error:", error);
     res.status(500).json({ error: "Failed to communicate with Dialogflow API" });
