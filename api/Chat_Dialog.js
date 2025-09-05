@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 　console.log("実際に使われているプロジェクトID:", actualProjectId);
 　console.info("実際に使われているプロジェクトID:", actualProjectId);
 　console.error("実際に使われているプロジェクトID:", actualProjectId);
-　res.status().json("実際に使われているプロジェクトID:", actualProjectId);
+　res.status(200).json("実際に使われているプロジェクトID:", actualProjectId);
 
 
   // ??セッションパスをここで作成！
