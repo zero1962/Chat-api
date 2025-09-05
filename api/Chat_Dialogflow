@@ -9,7 +9,7 @@ const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
 
 // DialogflowのプロジェクトID
 // GCPプロジェクトIDに置き換えてください
-const projectId = "your-gcp-project-id";
+const projectId = "gen-lang-client-067380249";
 
 // セッションIDはユーザーごとに一意のIDを使用します
 const sessionId = "12345"; // ユーザーを識別するID（セッション管理が必要）
