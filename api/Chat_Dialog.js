@@ -20,7 +20,8 @@ const sessionClient = new dialogflow.SessionsClient({
   projectId: projectId,
   credentials: {
     client_email: clientEmail,
-    private_key: privateKey,
+    // 改行コードをプログラムで置き換える
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
   },
 });
 
