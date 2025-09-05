@@ -62,15 +62,19 @@ export default async function handler(req, res) {
 
   try {
     // Dialogflow APIを呼び出し
-    const responses = await sessionClient.detectIntent(request);
-    const result = responses[0].queryResult;
+    //const responses = await sessionClient.detectIntent(request);
+    //const result = responses[0].queryResult;
+
+    const [response] = await sessionClient.detectIntent(request);
+    const result = response.queryResult;
+    console.log("Dialogflowの返答:", result); // ←ここに入れる！
+
 
     // クライアントに応答を返す
     res.status(200).json({
       text: result.fulfillmentText,
       intentDisplayName: result.intent.displayName,
     });
-    console.log(result);
   } catch (error) {
     console.error("Dialogflow API Error:", error);
     res.status(500).json({ error: "Failed to communicate with Dialogflow API" });
