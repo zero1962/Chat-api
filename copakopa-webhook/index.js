@@ -2,7 +2,7 @@
 require("dotenv").config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { callGeminiAPI } = require('./gemini'); // ← さっき作ったやつ！
 require('dotenv').config();
 
 const app = express();
@@ -11,27 +11,17 @@ app.use(bodyParser.json());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/webhook', async (req, res) => {
-  const query = req.body.queryResult.queryText;
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  const userMessage = req.body.queryResult.queryText;
+  console.log('ユーザーのメッセージ:', userMessage);
+ 
+  const geminiReply = await callGeminiAPI(userMessage);
+  console.log('Geminiの返事:', geminiReply);
 
-  try {
-    const result = await model.generateContent(query);
-    const response = await result.response;
-    const text = response.text();
-
-    res.json({
-      fulfillmentText: text,
-    });
-  } catch (error) {
-    console.error('Error generating response:', error);
-    res.json({
-      fulfillmentText: 'ごめんね、うまく答えられなかったみたい…💦',
-    });
-  }
+  res.json({
+    fulfillmentText: geminiReply
+  });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Webhook server is running on port ${PORT}`);
-  console.log("APIキー:", process.env.GEMINI_API_KEY);
+app.listen(3000, () => {
+  console.log('Webhook server is running on port 3000');
 });
