@@ -14,6 +14,8 @@ app.post('/webhook', async (req, res) => {
   const query = req.body.queryResult.queryText;
   const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
+console.log("APIキー:", process.env.GEMINI_API_KEY);
+
   try {
     const result = await model.generateContent(query);
     const response = await result.response;
