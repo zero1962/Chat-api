@@ -14,8 +14,6 @@ app.post('/webhook', async (req, res) => {
   const query = req.body.queryResult.queryText;
   const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-console.log("APIキー:", process.env.GEMINI_API_KEY);
-
   try {
     const result = await model.generateContent(query);
     const response = await result.response;
@@ -35,4 +33,5 @@ console.log("APIキー:", process.env.GEMINI_API_KEY);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Webhook server is running on port ${PORT}`);
+  console.log("APIキー:", process.env.GEMINI_API_KEY);
 });
