@@ -1,22 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { callGeminiAPI } = require('./callGeminiAPI');
+const webhookHandler = require('./webhook'); // ← ここがポイント！
 
 const app = express();
 app.use(bodyParser.json());
 
-app.post('/webhook', async (req, res) => {
-  const userMessage = req.body.queryResult.queryText;
-  console.log('ユーザーのメッセージ:', userMessage);
-
-  const geminiReply = await callGeminiAPI(userMessage);
-  console.log('Geminiの返事:', geminiReply);
-
-  res.json({
-    fulfillmentText: geminiReply
-  });
-});
+app.post('/webhook', webhookHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
