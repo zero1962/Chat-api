@@ -1,7 +1,8 @@
 const { callGeminiAPI } = require('./callGeminiAPI');
 
 module.exports = async (req, res) => {
-  const userMessage = req.body.queryResult?.queryText;
+//  const userMessage = req.body.queryResult?.queryText;
+  const userMessage = req.body.message;
   console.log('ユーザーのメッセージ:', userMessage);
 
   try {
