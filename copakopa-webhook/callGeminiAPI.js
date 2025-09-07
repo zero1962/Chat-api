@@ -24,7 +24,7 @@ async function callGeminiAPI(userMessage) {
     const reply = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     return reply || 'うまく返事ができなかったみたい…💦';
   } catch (error) {
-    console.error('Gemini API 呼び出しエラー:', error.message);
+    console.error('Gemini API ???呼び出しエラー:', error.message);
     return 'エラーが発生しちゃった…🌪️';
   }
 }
