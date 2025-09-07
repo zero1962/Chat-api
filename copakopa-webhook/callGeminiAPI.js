@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function callGeminiAPI(userMessage) {
-  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro:generateContent';
   const apiKey = process.env.GEMINI_API_KEY;
 
   try {
