@@ -20,6 +20,9 @@ async function callGeminiAPI(userMessage) {
         }
       }
     );
+console.log(apiKey);
+console.error('🌪️ Gemini API 呼び出しエラー:', error.message);
+console.log('🌊 Geminiのレスポンス:', response.data);
 
     const reply = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     return reply || 'うまく返事ができなかったみたい…💦';
