@@ -1,4 +1,4 @@
-const { callGeminiAPI } = require('./callGeminiAPI');
+const { callGeminiAPI } = require('../copakopa-webhook/callGeminiAPI');
 
 module.exports = async (req, res) => {
   const intentName = req.body.queryResult?.intent?.displayName;
