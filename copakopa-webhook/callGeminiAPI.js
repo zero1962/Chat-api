@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function callGeminiAPI(userMessage) {
-  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+  const endpoint = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent';
   const apiKey = process.env.GEMINI_API_KEY;
 
   try {
@@ -21,13 +21,11 @@ async function callGeminiAPI(userMessage) {
       }
     );
 console.log(apiKey);
-console.error('🌪️ Gemini API 呼び出しエラー:', error.message);
 console.log('🌊 Geminiのレスポンス:', response.data);
-
     const reply = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     return reply || 'うまく返事ができなかったみたい…💦';
   } catch (error) {
-    console.error('Gemini API ???呼び出しエラー:', error.message);
+    console.error('🌪️ Gemini API 呼び出しエラー:', error.message);
     return 'エラーが発生しちゃった…🌪️';
   }
 }
