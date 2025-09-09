@@ -39,6 +39,12 @@ export default async function handler(req, res) {
   // ユーザーからのメッセージを取得
   const { message } = req.body;
 
+ console.log("受け取ったリクエストボディ:", req.body);
+ if (!message) {
+   console.warn("messageが空です！req.body:", req.body);
+   res.status(400).json({ error: "messageが必要です" });
+   return;
+ }
   const actualProjectId = await sessionClient.getProjectId();
   console.log("実際に使われているプロジェクトID:", actualProjectId);
   console.info("実際に使われているプロジェクトID:", actualProjectId);
