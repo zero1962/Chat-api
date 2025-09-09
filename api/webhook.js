@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   // Gemini に渡さないインテント → Dialogflow に任せる
   if (!geminiIntents.includes(intentName)) {
     console.log('🛑 Gemini に渡さないインテント。Dialogflow に任せます。');
-    return res.json({ fulfillmentText: '' });
+    return res.status(204).end(); // ← これが一番自然！
   }
 
   // Gemini に渡す処理
