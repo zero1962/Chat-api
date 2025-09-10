@@ -5,6 +5,7 @@ module.exports = async (req, res) => {
   const userMessage = req.body.queryResult?.queryText;
   console.log('🫧 インテント名:', intentName);
   console.log('🫧 ユーザーのメッセージ:', userMessage);
+  console.log("🫧 受け取ったリクエスト:", JSON.stringify(req.body, null, 2));
 
   // Gemini に渡すインテント一覧（必要に応じて追加！）
   const geminiIntents = [
