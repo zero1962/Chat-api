@@ -56,6 +56,8 @@ export default async function handler(req, res) {
     const reply =
       result.fulfillmentText || '返事が見つからなかったみたい…💦';
     console.log("Dialogflowからのメッセージ:", reply);
+    console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
+
     res.status(200).json({
       fulfillmentText: reply
     });
