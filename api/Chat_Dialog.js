@@ -62,7 +62,8 @@ try {
 
   console.log("Dialogflowからのメッセージ:", reply);
 
-  res.status(200).json({ fulfillmentText: reply });
+  // res.status(200).json({ fulfillmentText: reply });
+  res.status(200).json({ reply });
 } catch (error) {
   console.error("🫧 Dialogflow API Error:", error);
   res.status(500).json({ fulfillmentText: "Dialogflowとの通信に失敗しました。" });
