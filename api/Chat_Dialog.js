@@ -51,14 +51,13 @@ export default async function handler(req, res) {
     };
 
     const [response] = await sessionClient.detectIntent(request);
-    const result = response.queryResult;
-
-    console.log("Dialogflowの返答:", result);
+    // const result = response.queryResult;
 
     const reply =
-      result.fulfillmentText ||
-      (result.fulfillmentMessages?.[0]?.text?.text?.[0]) ||
-      "返答が見つかりませんでした";
+       response.data.fulfillmentText || // Webhook ON のとき
+       response.data.queryResult?.fulfillmentText || // Webhook OFF のとき
+       '返事が見つからなかったみたい…💦';
+    console.log("Dialogflowからのメッセージ:", reply);
 
     res.status(200).json({
       fulfillmentText: reply
