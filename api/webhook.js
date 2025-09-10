@@ -1,5 +1,5 @@
 // api/webhook.js　2025.09.10（Vercel対応・ESM形式）
-
+console.log("🫧 Webhookバージョン: 2025.09.10-23:15");
 import { callGeminiAPI } from '../copakopa-webhook/callGeminiAPI.js'; // 拡張子 .js を忘れずに！
 
 const geminiIntents = [
@@ -10,6 +10,7 @@ const geminiIntents = [
 ];
 
 export default async function handler(req, res) {
+  console.log("🫧 Webhookバージョン: 2025.09.10-23:15");
   console.log("🫧 Webhookが呼ばれました！");
   console.log("🫧 リクエスト受信:", JSON.stringify(req.body, null, 2));
 
