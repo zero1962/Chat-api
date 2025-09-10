@@ -38,35 +38,27 @@ export default async function handler(req, res) {
     return;
   }
 
-  try {
-    const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
+try {
+  console.log("🫧 detectIntent 実行前");
 
-    const request = {
-      session: sessionPath,
-      queryInput: {
-        text: {
-          text: userMessage,
-          languageCode: languageCode,
-        },
-      },
-    };
+  const [response] = await sessionClient.detectIntent(request);
 
-    const [response] = await sessionClient.detectIntent(request);
-    // const result = response.queryResult;
-    const result = response.queryResult;
-    const reply =
-      result.fulfillmentText || '返事が見つからなかったみたい…💦';
-    console.log("Dialogflowからのメッセージ:", reply);
-    console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
+  console.log("🫧 detectIntent 実行後");
 
-    res.status(200).json({
-      fulfillmentText: reply
-    });
+  const result = response.queryResult;
+  console.log("🫧 queryResult:", JSON.stringify(result, null, 2));
 
-  } catch (error) {
-    console.error("Dialogflow API Error:", error);
-    res.status(500).json({
-      fulfillmentText: "Dialogflowとの通信に失敗しました。"
-    });
-  }
+  const reply =
+    result.fulfillmentText ||
+    result.fulfillmentMessages?.[0]?.text?.text?.[0] ||
+    '返事が見つからなかったみたい…💦';
+
+  console.log("Dialogflowからのメッセージ:", reply);
+
+  res.status(200).json({ fulfillmentText: reply });
+} catch (error) {
+  console.error("🫧 Dialogflow API Error:", error);
+  res.status(500).json({ fulfillmentText: "Dialogflowとの通信に失敗しました。" });
+}
+
 }
