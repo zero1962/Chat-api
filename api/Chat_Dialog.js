@@ -14,6 +14,7 @@ const sessionClient = new dialogflow.SessionsClient({
 });
 
 export default async function handler(req, res) {
+  console.log("🫧 Chat_Dialog.js handler 起動！");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -34,12 +35,12 @@ export default async function handler(req, res) {
     req.body?.queryResult?.text?.text?.[0] ||
     req.body?.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0];
 
-
   console.log("Dialogflowからのメッセージ:", userMessage);
   // console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
   console.log("🫧 Webhook受信:", JSON.stringify(req.body, null, 2));
 
   if (!userMessage) {
+    console.log("🫧 userMessage が空なので 400 を返します！");
     res.status(400).json({ fulfillmentText: "メッセージが空です。" });
     return;
   }
