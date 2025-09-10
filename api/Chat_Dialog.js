@@ -3,7 +3,7 @@ import dialogflow from "@google-cloud/dialogflow";
 const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n");
 const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
 const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-const sessionId = "12345";
+const sessionId = "12345"; // 任意のセッションID（UUIDでもOK）
 const languageCode = "ja-JP";
 
 const sessionClient = new dialogflow.SessionsClient({
@@ -29,15 +29,13 @@ export default async function handler(req, res) {
     return;
   }
 
-  // const userMessage = req.body?.queryResult?.queryText;
   const userMessage =
     req.body?.queryResult?.queryText ||
     req.body?.queryResult?.text?.text?.[0] ||
     req.body?.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0];
 
-  console.log("Dialogflowからのメッセージ:", userMessage);
-  // console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
   console.log("🫧 Webhook受信:", JSON.stringify(req.body, null, 2));
+  console.log("🫧 userMessage:", userMessage);
 
   if (!userMessage) {
     console.log("🫧 userMessage が空なので 400 を返します！");
@@ -45,29 +43,40 @@ export default async function handler(req, res) {
     return;
   }
 
-try {
-  console.log("🫧 detectIntent 実行前");
+  try {
+    console.log("🫧 detectIntent 実行前");
 
-  const [response] = await sessionClient.detectIntent(request);
+    const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
 
-  console.log("🫧 detectIntent 実行後");
+    const request = {
+      session: sessionPath,
+      queryInput: {
+        text: {
+          text: userMessage,
+          languageCode: languageCode,
+        },
+      },
+    };
 
-  const result = response.queryResult;
-  console.log("🫧 queryResult:", JSON.stringify(result, null, 2));
+    console.log("🫧 detectIntent に渡す request:", JSON.stringify(request, null, 2));
 
-  const reply =
-    result.fulfillmentText ||
-    result.fulfillmentMessages?.[0]?.text?.text?.[0] ||
-    '返事が見つからなかったみたい…💦';
+    const [response] = await sessionClient.detectIntent(request);
 
-  console.log("Dialogflowからのメッセージ:", reply);
+    console.log("🫧 detectIntent 実行後");
 
-  // res.status(200).json({ fulfillmentText: reply });
-  res.status(200).json({ reply });
-  
-} catch (error) {
-  console.error("🫧 Dialogflow API Error:", error);
-  res.status(500).json({ fulfillmentText: "Dialogflowとの通信に失敗しました。" });
-}
+    const result = response.queryResult;
+    console.log("🫧 queryResult:", JSON.stringify(result, null, 2));
 
+    const reply =
+      result.fulfillmentText ||
+      result.fulfillmentMessages?.[0]?.text?.text?.[0] ||
+      "返事が見つからなかったみたい…💦";
+
+    console.log("🫧 Dialogflowからのメッセージ:", reply);
+
+    res.status(200).json({ reply });
+  } catch (error) {
+    console.error("🫧 Dialogflow API Error:", error);
+    res.status(500).json({ fulfillmentText: "Dialogflowとの通信に失敗しました。" });
+  }
 }
