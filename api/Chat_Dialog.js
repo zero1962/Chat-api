@@ -31,6 +31,7 @@ export default async function handler(req, res) {
   const userMessage = req.body?.queryResult?.queryText;
 
   console.log("Dialogflowからのメッセージ:", userMessage);
+  console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
 
   if (!userMessage) {
     res.status(400).json({ fulfillmentText: "メッセージが空です。" });
