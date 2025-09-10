@@ -28,10 +28,16 @@ export default async function handler(req, res) {
     return;
   }
 
-  const userMessage = req.body?.queryResult?.queryText;
+  // const userMessage = req.body?.queryResult?.queryText;
+  const userMessage =
+    req.body?.queryResult?.queryText ||
+    req.body?.queryResult?.text?.text?.[0] ||
+    req.body?.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0];
+
 
   console.log("Dialogflowからのメッセージ:", userMessage);
-  console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
+  // console.log("🫧 process.env:", JSON.stringify(process.env, null, 2));
+  console.log("🫧 Webhook受信:", JSON.stringify(req.body, null, 2));
 
   if (!userMessage) {
     res.status(400).json({ fulfillmentText: "メッセージが空です。" });
