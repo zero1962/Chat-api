@@ -52,16 +52,14 @@ export default async function handler(req, res) {
 
     const [response] = await sessionClient.detectIntent(request);
     // const result = response.queryResult;
-
+    const result = response.queryResult;
     const reply =
-       response.data.fulfillmentText || // Webhook ON のとき
-       response.data.queryResult?.fulfillmentText || // Webhook OFF のとき
-       '返事が見つからなかったみたい…💦';
+      result.fulfillmentText || '返事が見つからなかったみたい…💦';
     console.log("Dialogflowからのメッセージ:", reply);
-
     res.status(200).json({
       fulfillmentText: reply
     });
+
   } catch (error) {
     console.error("Dialogflow API Error:", error);
     res.status(500).json({
