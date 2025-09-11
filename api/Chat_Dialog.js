@@ -14,7 +14,7 @@ const sessionClient = new dialogflow.SessionsClient({
 });
 
 export default async function handler(req, res) {
-  console.log("🫧 Chat_Dialog.js handler 起動！");
+  console.log("🫧 Chat_Dialog.js handler 起動！バージョン: 2025.09.11-18:40");
   console.log('環境変数:', .env);
   console.log('projectId:', projectId);
   res.setHeader("Access-Control-Allow-Origin", "*");
