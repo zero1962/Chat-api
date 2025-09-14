@@ -31,8 +31,14 @@ export default async function handler(req, res) {
     return;
   }
 
+  // const userMessage =
+  //   req.body?.queryResult?.queryText ||
+  //   req.body?.queryResult?.text?.text?.[0] ||
+  //   req.body?.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0];
+
   const userMessage =
-    req.body?.queryResult?.queryText ||
+    req.body?.text || // ← フロントエンドからの直接送信に対応
+    req.body?.queryResult?.queryText || // ← Dialogflow形式にも対応
     req.body?.queryResult?.text?.text?.[0] ||
     req.body?.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0];
 
@@ -40,9 +46,10 @@ export default async function handler(req, res) {
   console.log("🫧 userMessage:", userMessage);
 
   if (!userMessage) {
-    console.log("🫧 userMessage が空なので 400 を返します！");
+     console.log("🫧 userMessage が空なので 400 を返します！");
+     console.error("🫧 userMessage が見つかりません！");
     res.status(400).json({ fulfillmentText: "メッセージが空です。" });
-    return;
+     return res.status(400).json({ error: "Missing user message" });
   }
 
   try {
