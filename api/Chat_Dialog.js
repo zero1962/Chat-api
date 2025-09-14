@@ -14,7 +14,7 @@ const sessionClient = new dialogflow.SessionsClient({
 });
 
 export default async function handler(req, res) {
-  console.log("🫧 Chat_Dialog.js handler 起動！バージョン: 2025.09.11-18:40");
+  console.log("🫧 Chat_Dialog.js handler 起動！バージョン: 2025.09.14-18:55");
   console.log('環境変数:', process.env);
   console.log('projectId:', projectId);
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -64,7 +64,6 @@ export default async function handler(req, res) {
     const [response] = await sessionClient.detectIntent(request);
     console.log("🫧 detectIntent 実行後");
     const result = response.queryResult;
-    console.log("🫧 queryResult:", JSON.stringify(result, null, 2));
     const reply =
       result.fulfillmentText ||
       result.fulfillmentMessages?.[0]?.text?.text?.[0] ||
@@ -73,7 +72,9 @@ export default async function handler(req, res) {
       res.status(200).json({
         reply,
         projectId: process.env.GOOGLE_CLOUD_PROJECT
-   });
+         });
+   console.log("🫧 queryResult:", JSON.stringify(result, null, 2));
+   console.log("🫧 Dialogflowからのメッセージ:", reply);
   } catch (error) {
     console.error("🫧 Dialogflow API Error:", error);
     res.status(500).json({ fulfillmentText: "Dialogflowとの通信に失敗しました。" });
