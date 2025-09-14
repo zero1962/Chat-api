@@ -76,7 +76,12 @@ export default async function handler(req, res) {
 
     console.log("🫧 Dialogflowからのメッセージ:", reply);
 
-    res.status(200).json({ reply });
+    //res.status(200).json({ reply });
+
+    res.status(200).json({
+        reply: geminiResponse,
+        projectId: process.env.GOOGLE_CLOUD_PROJECT
+    });
   } catch (error) {
     console.error("🫧 Dialogflow API Error:", error);
     res.status(500).json({ fulfillmentText: "Dialogflowとの通信に失敗しました。" });
