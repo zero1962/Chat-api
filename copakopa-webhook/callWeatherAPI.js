@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export async function callWeatherAPI(userMessage) {
   const endpoint = 'https://api.openweathermap.org/data/2.5/weather';
-  const apiKey = 'eca9b7bf55513e81fbb41548a9b776c1'; // ← 本番では環境変数に戻してください
+  const apiKey = process.env.OPENWEATHER_API_KEY;
 
   const cityMap = {
     '東京': 'Tokyo',
