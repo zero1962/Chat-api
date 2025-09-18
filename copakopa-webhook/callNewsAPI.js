@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳用にGeminiを利用
+import { callGeminiAPI } from './callGeminiAPI.js'; // Gemini翻訳用
 
 export async function callNewsAPI(userMessage) {
   const endpoint = 'https://newsdata.io/api/1/news';
@@ -10,10 +10,9 @@ export async function callNewsAPI(userMessage) {
       params: {
         apikey: apiKey,
         country: 'jp',         // 日本のニュース
-        language: 'ja',        // 日本語指定
-        category: 'top',       // トップニュース
-        q: '日本',              // キーワード（任意）
-        page: 1
+        language: 'en',        // 日本語は非対応のため英語に変更
+        q: 'Japan',            // 検索キーワード（曖昧な「ニュース」ではなく具体的に）
+        page: 1                // 最初のページ
       }
     });
 
@@ -30,7 +29,7 @@ export async function callNewsAPI(userMessage) {
 
     const summary = `${title}\n${description}\n🔗 ${link}`;
 
-    // Geminiで自然な日本語に整形（翻訳不要ならこの処理は省略可能）
+    // Geminiで自然な日本語に整形（翻訳＋要約）
     const translated = await callGeminiAPI(`以下のニュースを自然な日本語で要約してください:\n${summary}`);
 
     return `📰 最新ニュース:\n${translated}`;
