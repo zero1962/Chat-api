@@ -1,13 +1,22 @@
 import { callGeminiAPI } from '../copakopa-webhook/callGeminiAPI.js';
-import { callWeatherAPI } from '../copakopa-webhook/callWeatherAPI.js'; // 天気API用の関数を追加
+import { callWeatherAPI } from '../copakopa-webhook/callWeatherAPI.js';
+import { callNewAPI } from '../copakopa-webhook/callNewAPI.js'; // 🆕 ニュースAPI用の関数を追加
 
-console.log("🫧 Webhookバージョン: 2025.09.11-17:46");
+console.log("🫧 Webhookバージョン: 2025.09.18-13:15");
 
 const geminiIntents = [
   '雑談',
   '質問',
   'アイデア生成',
   'Default Fallback Intent'
+];
+
+const weatherIntents = [
+  'WeatherIntent'
+];
+
+const newsIntents = [
+  'NewsIntent', // 🆕 Dialogflow側で「ニュースを聞く」などに対応するインテント名
 ];
 
 export default async function handler(req, res) {
@@ -30,12 +39,21 @@ export default async function handler(req, res) {
       });
     }
 
-    if (intentName === 'WeatherIntent') {
+    if (weatherIntents.includes(intentName)) {
       const weatherReply = await callWeatherAPI(userMessage);
       console.log("🫧 天気APIの返事:", weatherReply);
 
       return res.json({
         fulfillmentText: weatherReply || '天気情報が取得できなかったみたい…☁️'
+      });
+    }
+
+    if (newsIntents.includes(intentName)) {
+      const newsReply = await callNewAPI(userMessage);
+      console.log("🫧 ニュースAPIの返事:", newsReply);
+
+      return res.json({
+        fulfillmentText: newsReply || 'ニュースが取得できなかったみたい…📰'
       });
     }
 
