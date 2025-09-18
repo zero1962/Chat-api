@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳用にGeminiを利用www
 
-export async function callNewAPI(userMessage) {
+export async function callNewsAPI(userMessage) {
   const endpoint = 'https://newsapi.org/v2/top-headlines';
   const apiKey = process.env.NEWS_API_KEY;
 
