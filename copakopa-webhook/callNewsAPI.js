@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳用にGeminiを利用www
+import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳用にGeminiを利用
 
 export async function callNewsAPI(userMessage) {
   const endpoint = 'https://newsapi.org/v2/top-headlines';
@@ -9,8 +9,9 @@ export async function callNewsAPI(userMessage) {
     const response = await axios.get(endpoint, {
       params: {
         country: 'jp',         // 日本のニュース
-        language: 'en',        // 英語記事（日本語は少ないため）
-        pageSize: 3,           // 上位3件を取得
+        language: 'en',        // 日本語記事が少ないため英語指定
+        pageSize: 5,           // 上位5件を取得
+        q: 'Japan',            // キーワードで日本関連を強調
         apiKey: apiKey
       }
     });
