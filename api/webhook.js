@@ -1,6 +1,6 @@
 import { callGeminiAPI } from '../copakopa-webhook/callGeminiAPI.js';
 import { callWeatherAPI } from '../copakopa-webhook/callWeatherAPI.js';
-import { callNewAPI } from '../copakopa-webhook/callNewAPI.js'; // 🆕 ニュースAPI用の関数を追加
+import { callNewsAPI } from '../copakopa-webhook/callNewsAPI.js'; // 🆕 ニュースAPI用の関数を追加
 
 console.log("🫧 Webhookバージョン: 2025.09.18-13:15");
 
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     }
 
     if (newsIntents.includes(intentName)) {
-      const newsReply = await callNewAPI(userMessage);
+      const newsReply = await callNewsAPI(userMessage);
       console.log("🫧 ニュースAPIの返事:", newsReply);
 
       return res.json({
