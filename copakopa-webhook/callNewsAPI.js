@@ -1,29 +1,34 @@
-import Parser from 'rss-parser';
-const parser = new Parser();
+import axios from 'axios';
+import { XMLParser } from 'fast-xml-parser'; // RSS解析用
+import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳・整形用
 
-const categoryFeeds = {
-  world: 'https://news.google.com/rss/headlines/section/topic/WORLD?hl=ja&gl=JP&ceid=JP:ja',
-  business: 'https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=ja&gl=JP&ceid=JP:ja',
-  technology: 'https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=ja&gl=JP&ceid=JP:ja',
-  sports: 'https://news.google.com/rss/headlines/section/topic/SPORTS?hl=ja&gl=JP&ceid=JP:ja',
-  entertainment: 'https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=ja&gl=JP&ceid=JP:ja',
-  health: 'https://news.google.com/rss/headlines/section/topic/HEALTH?hl=ja&gl=JP&ceid=JP:ja'
-};
-
-export async function fetchNewsByCategory(category = 'technology') {
-  const feedUrl = categoryFeeds[category.toLowerCase()];
-  if (!feedUrl) {
-    return `カテゴリ「${category}」はサポートされていません。`;
-  }
+export async function callNewsAPI(userMessage) {
+  const rssUrl = 'https://news.google.com/rss/search?q=最新ニュース&hl=ja&gl=JP&ceid=JP:ja';
 
   try {
-    const feed = await parser.parseURL(feedUrl);
-    const topArticles = feed.items.slice(0, 5).map(item => {
-      return `📰 ${item.title}\n🔗 ${item.link}`;
-    });
-    return topArticles.join('\n\n');
+    const rssResponse = await axios.get(rssUrl);
+    const parser = new XMLParser();
+    const parsed = parser.parse(rssResponse.data);
+
+    const items = parsed.rss?.channel?.item;
+    if (!items || items.length === 0) {
+      return 'ニュースが見つかりませんでした…📰';
+    }
+
+    // 最初のニュース記事を取得
+    const topItem = items[0];
+    const title = topItem.title || '';
+    const description = topItem.description || '';
+    const link = topItem.link || '';
+
+    const summary = `${title}\n${description}\n🔗 ${link}`;
+
+    // Geminiで自然な日本語に整形（翻訳＋要約）
+    const translated = await callGeminiAPI(`以下のニュースを自然な日本語で要約してください:\n${summary}`);
+
+    return `📰 最新ニュース:\n${translated}`;
   } catch (error) {
-    console.error('RSS取得エラー:', error.message);
+    console.error('📰 Google News RSS取得エラー:', error.message);
     return 'ニュースの取得に失敗しました…💥';
   }
 }

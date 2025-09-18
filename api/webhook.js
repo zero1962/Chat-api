@@ -1,8 +1,8 @@
 import { callGeminiAPI } from '../copakopa-webhook/callGeminiAPI.js';
 import { callWeatherAPI } from '../copakopa-webhook/callWeatherAPI.js';
-import { callNewsAPI } from '../copakopa-webhook/callNewsAPI.js'; // 🆕 ニュースAPI用の関数を追加
+import { fetchNewsByCategory } from '../copakopa-webhook/fetchNewsByCategory.js'; // 🆕 RSSカテゴリ対応関数
 
-console.log("🫧 Webhookバージョン: 2025.09.18-13:15");
+console.log("🫧 Webhookバージョン: 2025.09.18-カテゴリ対応");
 
 const geminiIntents = [
   '雑談',
@@ -16,7 +16,7 @@ const weatherIntents = [
 ];
 
 const newsIntents = [
-  'NewsIntent', // 🆕 Dialogflow側で「ニュースを聞く」などに対応するインテント名
+  'NewsIntent'
 ];
 
 export default async function handler(req, res) {
@@ -25,9 +25,11 @@ export default async function handler(req, res) {
 
   const intentName = req.body.queryResult?.intent?.displayName;
   const userMessage = req.body.queryResult?.queryText;
+  const newsCategory = req.body.queryResult?.parameters?.['news-category'] || 'technology'; // 🆕 カテゴリ取得
 
   console.log("🫧 インテント名:", intentName);
   console.log("🫧 ユーザーのメッセージ:", userMessage);
+  console.log("🫧 ニュースカテゴリ:", newsCategory);
 
   try {
     if (geminiIntents.includes(intentName)) {
@@ -49,7 +51,7 @@ export default async function handler(req, res) {
     }
 
     if (newsIntents.includes(intentName)) {
-      const newsReply = await callNewsAPI(userMessage);
+      const newsReply = await fetchNewsByCategory(newsCategory); // 🆕 カテゴリ別ニュース取得
       console.log("🫧 ニュースAPIの返事:", newsReply);
 
       return res.json({
