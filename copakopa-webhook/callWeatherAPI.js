@@ -15,8 +15,8 @@ export async function callWeatherAPI(userMessage) {
   };
 
   const cityMatch = userMessage.match(/(東京|大阪|名古屋|札幌|福岡|京都)/);
-  const cityJa = cityMatch ? cityMatch[1] : '東京';
-  const city = cityMap[cityJa] || 'Tokyo';
+  const cityJa = cityMatch ? cityMatch[1] : '名古屋';
+  const city = cityMap[cityJa] || 'Nagoya';
 
   console.log('🌆 抽出された都市名:', cityJa);
   console.log('🌍 APIに渡す都市名:', city);
