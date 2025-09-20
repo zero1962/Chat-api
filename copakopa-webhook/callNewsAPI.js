@@ -21,9 +21,13 @@ export async function callNewsAPI(userMessage) {
     '政治': 'world' // Gemini対策
   };
 
-  // カテゴリ変換（完全一致でOK）
-  const category = categoryMap[userMessage.trim()] || 'general';
-  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
+  // カテゴリ抽出（完全一致）
+  const rawCategory = userMessage.trim();
+  const category = categoryMap[rawCategory] || 'general';
+  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;  // カテゴリ変換（完全一致でOK）
+
+//  const category = categoryMap[userMessage.trim()] || 'general';
+//  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
 //  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
 //  const rssUrl = 'https://news.google.com/rss/search?q=最新ニュース&hl=ja&gl=JP&ceid=JP:ja';
 
