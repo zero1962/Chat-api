@@ -1,9 +1,4 @@
-import axios from 'axios';
-import { XMLParser } from 'fast-xml-parser'; // RSS解析用
-import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳・整形用
-
 export async function callNewsAPI(userMessage) {
-  // カテゴリ変換マップ（日本語 → 英語）
   const categoryMap = {
     'スポーツ': 'sports',
     'テクノロジー': 'technology',
@@ -21,20 +16,22 @@ export async function callNewsAPI(userMessage) {
     '政治': 'world' // Gemini対策
   };
 
-  // 変換処理（完全一致）
-  const rawCategory = userMessage.trim();
-  const category = categoryMap[rawCategory] || 'general';
+  // ✅ 部分一致でカテゴリを抽出
+  let rawCategory = '';
+  let category = 'general';
+  for (const [jp, en] of Object.entries(categoryMap)) {
+    if (userMessage.includes(jp)) {
+      rawCategory = jp;
+      category = en;
+      break;
+    }
+  }
 
-  // ✅ ログ出力を追加して確認
-  console.log('🧭 変換前カテゴリ:', rawCategory);
+  // ✅ ログ出力で確認
+  console.log('🧭 変換前カテゴリ:', rawCategory || '(一致なし)');
   console.log('🧭 変換後カテゴリ:', category);
 
   const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
-
-//  const category = categoryMap[userMessage.trim()] || 'general';
-//  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
-//  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
-//  const rssUrl = 'https://news.google.com/rss/search?q=最新ニュース&hl=ja&gl=JP&ceid=JP:ja';
 
   try {
     const rssResponse = await axios.get(rssUrl);
@@ -46,21 +43,15 @@ export async function callNewsAPI(userMessage) {
       return 'ニュースが見つかりませんでした…📰';
     }
 
-    // 上位3件のニュースを取得して整形
     const summaries = items.slice(0, 3).map((item, index) => {
       const title = item.title || '';
       const description = item.description || '';
-      const link = item.link || '';
       return `【${index + 1}】${title}\n${description}`;
     }).join('\n\n');
 
-    const prompt = `以下の3件のニュースを簡潔に紹介してください。日本語で自然にまとめてください。\n\n${summaries}`;
-
-    // Geminiで自然な日本語に整形（翻訳＋要約）
+    const prompt = `以下は「${rawCategory || category}」カテゴリのニュースです。日本語で簡潔に紹介してください。\n\n${summaries}`;
     const translated = await callGeminiAPI(prompt);
-
-    // 最初のリンクだけ紹介（必要なら複数リンクも可能）
-    const links = items.slice(0, 3).map((item, index) => `🔗 ${item.link}`).join('\n');
+    const links = items.slice(0, 3).map((item) => `🔗 ${item.link}`).join('\n');
 
     return `📰 今日のニュース:\n${translated}\n\n${links}`;
   } catch (error) {
