@@ -5,14 +5,11 @@ import { callGeminiAPI } from './callGeminiAPI.js'; // 翻訳・整形用
 export async function callNewsAPI(userMessage) {
   // カテゴリ変換マップ（日本語 → 英語）
   const categoryMap = {
+    'スポーツ': 'sports',
     'テクノロジー': 'technology',
     '技術': 'technology',
-    'スポーツ': 'sports',
-    '運動': 'sports',
-    '試合': 'sports',
     'ビジネス': 'business',
     '経済': 'business',
-    '会社': 'business',
     '世界': 'world',
     '国際': 'world',
     'エンタメ': 'entertainment',
@@ -24,16 +21,10 @@ export async function callNewsAPI(userMessage) {
     '政治': 'world' // Gemini対策
   };
 
-  // ユーザーのメッセージからカテゴリを抽出
-  let category = 'general';
-  for (const [jp, en] of Object.entries(categoryMap)) {
-    if (userMessage.includes(jp)) {
-      category = en;
-      break;
-    }
-  }
-
+  // カテゴリ変換（完全一致でOK）
+  const category = categoryMap[userMessage.trim()] || 'general';
   const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
+//  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;
 //  const rssUrl = 'https://news.google.com/rss/search?q=最新ニュース&hl=ja&gl=JP&ceid=JP:ja';
 
   try {
