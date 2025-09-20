@@ -24,6 +24,8 @@ export async function callNewsAPI(userMessage) {
   // カテゴリ抽出（完全一致）
   const rawCategory = userMessage.trim();
   const category = categoryMap[rawCategory] || 'general';
+  console.log('🧭 変換前カテゴリ:', userMessage);
+  console.log('🧭 変換後カテゴリ:', category);
   const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(category)}&hl=ja&gl=JP&ceid=JP:ja`;  // カテゴリ変換（完全一致でOK）
 
 //  const category = categoryMap[userMessage.trim()] || 'general';
