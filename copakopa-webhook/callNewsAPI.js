@@ -15,18 +15,23 @@ export async function callNewsAPI(userMessage) {
       return 'ニュースが見つかりませんでした…📰';
     }
 
-    // 最初のニュース記事を取得
-    const topItem = items[0];
-    const title = topItem.title || '';
-    const description = topItem.description || '';
-    const link = topItem.link || '';
+    // 上位3件のニュースを取得して整形
+    const summaries = items.slice(0, 3).map((item, index) => {
+      const title = item.title || '';
+      const description = item.description || '';
+      const link = item.link || '';
+      return `【${index + 1}】${title}\n${description}`;
+    }).join('\n\n');
 
-    const summary = `${title}\n${description}\n🔗 ${link}`;
+    const prompt = `以下の3件のニュースを簡潔に紹介してください。日本語で自然にまとめてください。\n\n${summaries}`;
 
     // Geminiで自然な日本語に整形（翻訳＋要約）
-    const translated = await callGeminiAPI(`以下のニュースを自然な日本語で要約してください:\n${summary}`);
+    const translated = await callGeminiAPI(prompt);
 
-    return `📰 最新ニュース:\n${translated}`;
+    // 最初のリンクだけ紹介（必要なら複数リンクも可能）
+    const links = items.slice(0, 3).map((item, index) => `🔗 ${item.link}`).join('\n');
+
+    return `📰 今日のニュース:\n${translated}\n\n${links}`;
   } catch (error) {
     console.error('📰 Google News RSS取得エラー:', error.message);
     return 'ニュースの取得に失敗しました…💥';
